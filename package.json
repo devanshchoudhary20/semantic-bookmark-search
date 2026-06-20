@@ -34,7 +34,7 @@
       "https://*.huggingface.co/*"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' https://huggingface.co https://*.huggingface.co data: blob:;"
+      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' https://huggingface.co https://*.huggingface.co https://cdn.jsdelivr.net data: blob:;"
     }
   }
 }
