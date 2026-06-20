@@ -17,10 +17,15 @@ You remember the gist ("that article about retry backoff") but not the title, so
 
 ```bash
 npm install
-npm run dev          # loads an unpacked dev build into build/chrome-mv3-dev
+npm run dev          # watch build → build/chrome-mv3-dev
+npm run copy-ort     # one-time: vendor the ONNX-runtime WASM into the dev build
 ```
 
 Then load `build/chrome-mv3-dev` via `chrome://extensions` → Developer mode → Load unpacked.
+
+> **Why `copy-ort`?** MV3 bans remotely-hosted code, so the ONNX-runtime WASM can't be
+> loaded from a CDN — it's vendored from `ort-runtime/` into the build. `npm run build`
+> does this automatically; in `dev` mode run `npm run copy-ort` once after the first build.
 
 ## Build / package for the store
 

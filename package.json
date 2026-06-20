@@ -6,8 +6,9 @@
   "author": "devanshchoudhary20",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build",
-    "package": "plasmo package"
+    "build": "plasmo build && node scripts/copy-ort.mjs",
+    "copy-ort": "node scripts/copy-ort.mjs",
+    "package": "plasmo build && node scripts/copy-ort.mjs && plasmo package"
   },
   "dependencies": {
     "@huggingface/transformers": "3.3.3",
@@ -32,11 +33,10 @@
     "host_permissions": [
       "https://huggingface.co/*",
       "https://*.huggingface.co/*",
-      "https://*.hf.co/*",
-      "https://cdn.jsdelivr.net/*"
+      "https://*.hf.co/*"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net data: blob:;"
+      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co data: blob:;"
     }
   }
 }
