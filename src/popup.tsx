@@ -70,9 +70,7 @@ function IndexPopup() {
         count={corpus.length}
       />
       {renderBody()}
-      {ready && (
-        <Footer count={corpus.length} busy={false} onReindex={reindex} />
-      )}
+      {ready && <Footer count={corpus.length} onReindex={reindex} />}
     </div>
   )
 }
