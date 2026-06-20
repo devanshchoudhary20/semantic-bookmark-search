@@ -29,10 +29,29 @@ npm run build        # production build → build/chrome-mv3-prod
 npm run package       # zips it for the Chrome Web Store
 ```
 
+## Install from source (no store needed)
+
+1. `npm install && npm run build`
+2. Open `chrome://extensions`, enable **Developer mode** (top-right).
+3. **Load unpacked** → select `build/chrome-mv3-prod`.
+4. Click the toolbar icon. First open downloads the model once (~30 MB) and indexes your bookmarks with a progress bar; every open after that is instant.
+
+## Privacy
+
+Everything runs **on your device**. Your bookmarks and queries are never sent anywhere. The only network request is a one-time download of the open-source embedding model from the Hugging Face / jsDelivr CDNs, after which it's cached locally. No accounts, no servers, no telemetry.
+
 ## Stack
 
-Plasmo (MV3) · React + TypeScript · transformers.js (`all-MiniLM-L6-v2`) · IndexedDB · Tailwind.
+Plasmo (MV3) · React + TypeScript · transformers.js (`all-MiniLM-L6-v2`, quantized) · IndexedDB · Tailwind.
+
+## Roadmap (`later`)
+
+- Embed page **content**, not just titles — the biggest search-quality upgrade.
+- Auto-sync on bookmark add/remove (today: manual re-index).
+- Bundle the ONNX-runtime WASM locally for a fully offline, store-review-clean build.
+- Folder filters, search history, keyboard power-nav.
 
 ## License
 
 MIT
+
