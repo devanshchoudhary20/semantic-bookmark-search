@@ -12,6 +12,7 @@ export default defineConfig({
       targets: [
         { src: "manifest.json", dest: "." },
         { src: "ort-runtime/*", dest: "ort" },
+        { src: "models", dest: "." },
         { src: "assets/icon.png", dest: "." }
       ]
     })

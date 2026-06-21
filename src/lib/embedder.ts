@@ -4,8 +4,11 @@ import {
   type FeatureExtractionPipeline
 } from "@huggingface/transformers"
 
-// Fetch model weights from the HF hub once, then the browser Cache API serves them.
-env.allowLocalModels = false
+// Model weights are bundled inside the extension (models/ → dist/models) — zero network,
+// fully offline, nothing fetched at runtime.
+env.allowLocalModels = true
+env.allowRemoteModels = false
+env.localModelPath = chrome.runtime.getURL("models/")
 
 const onnxWasm = env.backends.onnx.wasm!
 // Single-threaded WASM avoids SharedArrayBuffer / cross-origin-isolation requirements,

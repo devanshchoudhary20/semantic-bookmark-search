@@ -41,11 +41,11 @@ cd dist && zip -r ../semantic-bookmark-search.zip . && cd ..    # zip for the Ch
 1. `npm install && npm run build`
 2. Open `chrome://extensions`, enable **Developer mode** (top-right).
 3. **Load unpacked** → select the `dist/` folder.
-4. Click the toolbar icon. First open downloads the model once (~30 MB) and indexes your bookmarks with a progress bar; every open after that is instant.
+4. Click the toolbar icon. First open indexes your bookmarks with a progress bar (the model is bundled — nothing is downloaded); every open after that is instant.
 
 ## Privacy
 
-Everything runs **on your device**. Your bookmarks and queries are never sent anywhere. The only network request is a one-time download of the open-source embedding model from Hugging Face, after which it's cached locally. The ML runtime ships inside the extension. No accounts, no servers, no telemetry.
+Everything runs **on your device** — the extension makes **zero network requests**. The embedding model and ML runtime are bundled inside the extension; your bookmarks and queries never leave your browser. No accounts, no servers, no telemetry, no remote anything. (The manifest declares no host permissions at all.)
 
 ## Stack
 
