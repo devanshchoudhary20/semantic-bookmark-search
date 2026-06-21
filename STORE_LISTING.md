@@ -80,9 +80,14 @@ Used to cache the computed embedding vectors in the browser (IndexedDB) so the i
 Used only to open a bookmark in a new tab when the user clicks a search result. No tab content or browsing activity is read.
 ```
 
-**Host permissions (`huggingface.co`, `*.huggingface.co`, `cdn.jsdelivr.net`)**
+**`favicon`**
 ```
-Required for a one-time download of the open-source embedding model and its WebAssembly runtime. After the initial download these files are cached locally and no further network requests are made. No user data is ever sent to these or any other servers.
+Used to display each bookmark's site icon next to its title, read from the browser's local favicon store. No network requests are made for icons.
+```
+
+**Host permissions**
+```
+None. The extension declares no host permissions and makes no network requests — the embedding model and WebAssembly runtime are bundled inside the package. Nothing is ever sent to any server.
 ```
 
 ---
@@ -114,19 +119,19 @@ https://github.com/devanshchoudhary20/semantic-bookmark-search#privacy
 | Marquee promo tile | optional | 1400×560 PNG | Only if featured |
 
 ### Screenshot shot list (capture 3)
-1. **Results state** — a natural-language query (e.g. "article about retry backoff") with ranked results + match %.
-2. **First-run indexing** — the progress bar mid-index ("Indexing 142 / 1024 embedded").
-3. **Empty / hint state** — the search box with the "Search by meaning" prompt, showing the on-device footer.
+1. **Results state** — a natural-language query (e.g. "article about retry backoff") with ranked results, favicons, and match-% pills.
+2. **Browse state** — the default view with the full "All bookmarks" list (favicons + titles), showing the popup is useful on open.
+3. **First-run indexing** — the progress bar mid-index ("Indexing 142 / 1024 embedded").
 
 > Tip: add a thin caption bar to each screenshot ("Search by meaning", "Runs 100% on-device", "Instant after first run") — captioned screenshots convert far better in the store.
 
 ---
 
 ## Pre-submission checklist
-- [ ] `npm run build` is clean; tested via Load unpacked in a real Chrome profile with real bookmarks.
-- [ ] 128×128 store icon exported.
+- [x] Fully offline — ONNX runtime **and** model weights bundled; no host permissions, no remote code (the #1 store-review risk, eliminated).
+- [x] `npm run build` is clean; tested via Load unpacked in a real Chrome profile with real bookmarks.
+- [ ] 128×128 store icon exported (from `assets/icon.svg`).
 - [ ] 3 screenshots captured at 1280×800.
 - [ ] Privacy policy section reachable at the URL above.
-- [ ] `npm run package` zip uploaded (`build/chrome-mv3-prod.zip`).
-- [ ] Consider bundling the ONNX-runtime WASM locally before submission — store review scrutinizes remote code; a fully-local build is the safest path to approval.
+- [ ] Zip uploaded: `cd dist && zip -r ../semantic-bookmark-search.zip .`
 ```
