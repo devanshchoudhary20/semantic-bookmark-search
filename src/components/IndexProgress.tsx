@@ -1,4 +1,4 @@
-import type { IndexPhase, IndexProgress as Progress } from "~lib/types"
+import type { IndexPhase, IndexProgress as Progress } from "~/lib/types"
 
 interface IndexProgressProps {
   phase: IndexPhase
@@ -15,22 +15,20 @@ export function IndexProgress({ phase, progress, modelProgress }: IndexProgressP
       : 0
   const percent = Math.min(100, Math.round(ratio * 100))
 
-  const title = loadingModel
-    ? "Downloading the model (one time)…"
-    : "Indexing your bookmarks…"
+  const title = loadingModel ? "Warming up the model…" : "Indexing your bookmarks…"
   const detail = loadingModel
-    ? "Runs fully on your device. Cached after this."
+    ? "Runs fully on your device — one time only."
     : `${progress.done.toLocaleString()} / ${progress.total.toLocaleString()} embedded`
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center">
-      <span className="text-3xl" aria-hidden="true">
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-10 text-center">
+      <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-2xl">
         🧠
       </span>
       <p className="text-sm font-medium text-slate-700">{title}</p>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full bg-indigo-500 transition-all duration-300"
+          className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-600 transition-all duration-300"
           style={{ width: `${percent}%` }}
           role="progressbar"
           aria-valuenow={percent}
@@ -38,7 +36,7 @@ export function IndexProgress({ phase, progress, modelProgress }: IndexProgressP
           aria-valuemax={100}
         />
       </div>
-      <p className="text-xs text-slate-500">{detail}</p>
+      <p className="text-xs tabular-nums text-slate-500">{detail}</p>
     </div>
   )
 }

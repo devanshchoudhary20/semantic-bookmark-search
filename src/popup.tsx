@@ -1,14 +1,18 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
-import "~style.css"
+import "~/style.css"
 
-import { Footer } from "~components/Footer"
-import { IndexProgress } from "~components/IndexProgress"
-import { ResultList } from "~components/ResultList"
-import { SearchBar } from "~components/SearchBar"
-import { StatusMessage } from "~components/StatusMessage"
-import { useBookmarkIndex } from "~hooks/useBookmarkIndex"
-import { useSemanticSearch } from "~hooks/useSemanticSearch"
+import { BookmarkList, type BookmarkListItem } from "~/components/BookmarkList"
+import { Footer } from "~/components/Footer"
+import { Header } from "~/components/Header"
+import { IndexProgress } from "~/components/IndexProgress"
+import { SearchBar } from "~/components/SearchBar"
+import { StatusMessage } from "~/components/StatusMessage"
+import { useBookmarkIndex } from "~/hooks/useBookmarkIndex"
+import { useSemanticSearch } from "~/hooks/useSemanticSearch"
+
+// Browsing the full list is a convenience; search is the point. Cap to stay snappy.
+const BROWSE_LIMIT = 200
 
 function IndexPopup() {
   const [query, setQuery] = useState("")
@@ -16,8 +20,24 @@ function IndexPopup() {
     useBookmarkIndex()
 
   const ready = phase === "ready"
-  const indexing = phase === "loading-model" || phase === "indexing"
+  const indexing =
+    phase === "idle" || phase === "loading-model" || phase === "indexing"
   const { hits, searching } = useSemanticSearch(query, corpus, ready)
+  const trimmed = query.trim()
+
+  const browseItems = useMemo<BookmarkListItem[]>(
+    () =>
+      [...corpus]
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .slice(0, BROWSE_LIMIT)
+        .map((bookmark) => ({ bookmark })),
+    [corpus]
+  )
+  const searchItems = useMemo<BookmarkListItem[]>(
+    () => hits.map((hit) => ({ bookmark: hit, score: hit.score })),
+    [hits]
+  )
+  const hiddenCount = Math.max(0, corpus.length - BROWSE_LIMIT)
 
   const renderBody = () => {
     if (phase === "error") {
@@ -30,7 +50,7 @@ function IndexPopup() {
             <button
               type="button"
               onClick={reindex}
-              className="mt-1 rounded-md bg-indigo-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-600">
+              className="mt-1 rounded-lg bg-indigo-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-600">
               Try again
             </button>
           }
@@ -48,7 +68,7 @@ function IndexPopup() {
       )
     }
 
-    if (indexing || phase === "idle") {
+    if (indexing) {
       return (
         <IndexProgress
           phase={phase === "idle" ? "loading-model" : phase}
@@ -58,11 +78,46 @@ function IndexPopup() {
       )
     }
 
-    return <ResultList query={query} hits={hits} searching={searching} />
+    if (!trimmed) {
+      return (
+        <BookmarkList
+          label={`All bookmarks · ${corpus.length.toLocaleString()}`}
+          items={browseItems}
+          footerNote={
+            hiddenCount > 0
+              ? `Showing ${BROWSE_LIMIT} of ${corpus.length.toLocaleString()} — search to find the rest`
+              : undefined
+          }
+        />
+      )
+    }
+
+    if (searchItems.length > 0) {
+      return <BookmarkList items={searchItems} />
+    }
+
+    if (searching) {
+      return (
+        <StatusMessage
+          icon="⏳"
+          title="Searching…"
+          detail="Ranking your bookmarks by meaning."
+        />
+      )
+    }
+
+    return (
+      <StatusMessage
+        icon="🔍"
+        title="No close matches"
+        detail="Try describing the idea in different words."
+      />
+    )
   }
 
   return (
-    <div className="flex h-[560px] w-[400px] flex-col bg-white font-sans">
+    <div className="flex h-[560px] w-[400px] flex-col bg-white font-sans text-slate-900">
+      <Header />
       <SearchBar
         value={query}
         onChange={setQuery}

@@ -12,7 +12,7 @@
     "48": "icon.png",
     "128": "icon.png"
   },
-  "permissions": ["bookmarks", "storage", "tabs"],
+  "permissions": ["bookmarks", "storage", "tabs", "favicon"],
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' data: blob:;"
   },
