@@ -1,7 +1,7 @@
 {
   "name": "semantic-bookmark-search",
   "displayName": "Semantic Bookmark Search",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Search your bookmarks by meaning, not exact text — fully on-device, no account.",
   "author": "devanshchoudhary20",
   "type": "module",
