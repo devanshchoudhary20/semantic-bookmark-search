@@ -1,10 +1,8 @@
 node_modules/
-.plasmo/
-build/
-out/
 dist/
+.vite/
+*.tsbuildinfo
 .env*
 *.log
-*.tsbuildinfo
 .DS_Store
 keys.json

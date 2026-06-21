@@ -17,37 +17,39 @@ You remember the gist ("that article about retry backoff") but not the title, so
 
 ```bash
 npm install
-npm run dev          # watch build → build/chrome-mv3-dev
-npm run copy-ort     # one-time: vendor the ONNX-runtime WASM into the dev build
+npm run dev          # vite build --watch → dist/
 ```
 
-Then load `build/chrome-mv3-dev` via `chrome://extensions` → Developer mode → Load unpacked.
+Then load `dist/` via `chrome://extensions` → Developer mode → Load unpacked. Re-run is automatic on save; reload the extension in `chrome://extensions` to pick up changes.
 
-> **Why `copy-ort`?** MV3 bans remotely-hosted code, so the ONNX-runtime WASM can't be
-> loaded from a CDN — it's vendored from `ort-runtime/` into the build. `npm run build`
-> does this automatically; in `dev` mode run `npm run copy-ort` once after the first build.
+> **Build tooling: Vite (not Plasmo/Parcel).** onnxruntime-web loads its WASM via a runtime
+> `import()`. Parcel rewrites that into its own module loader, which can't resolve a
+> `chrome-extension://` URL (`MODULE_NOT_FOUND`). Vite preserves it as a native `import()`,
+> so the locally-bundled ONNX runtime (`ort-runtime/` → `dist/ort/`, exposed via
+> `web_accessible_resources`) loads correctly. MV3 bans remote code, so this local bundling
+> is mandatory — the model weights are the only thing fetched (once) from Hugging Face.
 
 ## Build / package for the store
 
 ```bash
-npm run build        # production build → build/chrome-mv3-prod
-npm run package       # zips it for the Chrome Web Store
+npm run build                                                  # production build → dist/
+cd dist && zip -r ../semantic-bookmark-search.zip . && cd ..    # zip for the Chrome Web Store
 ```
 
 ## Install from source (no store needed)
 
 1. `npm install && npm run build`
 2. Open `chrome://extensions`, enable **Developer mode** (top-right).
-3. **Load unpacked** → select `build/chrome-mv3-prod`.
+3. **Load unpacked** → select the `dist/` folder.
 4. Click the toolbar icon. First open downloads the model once (~30 MB) and indexes your bookmarks with a progress bar; every open after that is instant.
 
 ## Privacy
 
-Everything runs **on your device**. Your bookmarks and queries are never sent anywhere. The only network request is a one-time download of the open-source embedding model from the Hugging Face / jsDelivr CDNs, after which it's cached locally. No accounts, no servers, no telemetry.
+Everything runs **on your device**. Your bookmarks and queries are never sent anywhere. The only network request is a one-time download of the open-source embedding model from Hugging Face, after which it's cached locally. The ML runtime ships inside the extension. No accounts, no servers, no telemetry.
 
 ## Stack
 
-Plasmo (MV3) · React + TypeScript · transformers.js (`all-MiniLM-L6-v2`, quantized) · IndexedDB · Tailwind.
+Vite (MV3) · React + TypeScript · transformers.js (`all-MiniLM-L6-v2`, quantized) · IndexedDB · Tailwind.
 
 ## Roadmap (`later`)
 

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Semantic Bookmark Search",
+  "version": "0.2.0",
+  "description": "Search your bookmarks by meaning, not exact text — fully on-device, no account.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": ["bookmarks", "storage", "tabs"],
+  "host_permissions": [
+    "https://huggingface.co/*",
+    "https://*.huggingface.co/*",
+    "https://*.hf.co/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co data: blob:;"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["ort/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

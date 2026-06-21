@@ -6,12 +6,14 @@ import {
 
 // Fetch model weights from the HF hub once, then the browser Cache API serves them.
 env.allowLocalModels = false
+
+const onnxWasm = env.backends.onnx.wasm!
 // Single-threaded WASM avoids SharedArrayBuffer / cross-origin-isolation requirements,
 // which an extension popup can't satisfy. Slower, but robust everywhere.
-env.backends.onnx.wasm.numThreads = 1
-// ONNX-runtime WASM is bundled inside the extension (assets/ort) — MV3 bans loading
-// the default jsDelivr-hosted .mjs/.wasm as remote code; these package-local URLs are allowed.
-env.backends.onnx.wasm.wasmPaths = {
+onnxWasm.numThreads = 1
+// ONNX-runtime WASM is bundled inside the extension (ort-runtime → /ort) — MV3 bans
+// loading the default jsDelivr-hosted .mjs/.wasm as remote code; these local URLs are allowed.
+onnxWasm.wasmPaths = {
   wasm: chrome.runtime.getURL("ort/ort-wasm-simd-threaded.jsep.wasm"),
   mjs: chrome.runtime.getURL("ort/ort-wasm-simd-threaded.jsep.mjs")
 }
